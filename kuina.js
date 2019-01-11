@@ -18,7 +18,7 @@ client.login(process.env.BOT_Token);
 
 
   // Create a new webhook
-const hook = new Discord.WebhookClient('490461513279209488', 'x6XEnJ8eUCVqAYdxDVaEBijE88NRuMoxnYww1HV3vDVz2TcGUbz6xCPFH-hIr9FLYXa2');
+const hook = new Discord.WebhookClient('webhookID', 'WebhookToken');
 
 // Send a message using the webhook
 hook.send('Ich bin jetze am leben!^^')
