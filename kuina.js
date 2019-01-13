@@ -115,9 +115,9 @@ client.on('message', message => {
   //UPTIME COMMAND
   if(message.content == `${Config.prefix}uptime`) {
     if(message.author.id == Config.DevID) {
-      let t = new Date(client.uptime)
-
-      let months = t.getUTCMonth();
+      let t = new Date(client.uptime) //Hier konvertieren wir die Uptime des Bots, als richtige Zeit, und nicht als Millisekunden.
+      
+      //Da wir nun die Uptime konvertiert haben, können wir uns nun verschiedene Werte ausgeben lassen. Tage, Stunden, Minuten und Sekunden. Und noch einiges mehr, was aber nicht nötig ist. (z.B Jahr oder so.)
       let days = t.getUTCDate()-1;
   
       let minutes = t.getUTCMinutes();
@@ -127,7 +127,7 @@ client.on('message', message => {
       let seconds = t.getUTCSeconds();
   
   
-      let uptime = `${days} days, ${hours} hours, ${minutes} minutes and ${seconds} seconds`;
+      let uptime = `${days} days, ${hours} hours, ${minutes} minutes and ${seconds} seconds`; //Hier sagen wir das der Bot alle Werte aufeinmal abschicken soll.
   
       message.channel.send(uptime)
     } else {
@@ -138,11 +138,11 @@ client.on('message', message => {
   //RESTART COMMAND
   if(message.content == `${Config.prefix}restart`) {
     if(message.author.id == Config.DevID) {
-      let restartchannel = message.channel
+      let restartchannel = message.channel //Channel wo er die Bestätigung gibt
 
-      restartchannel.send(`Restart in progress.`)
-      client.destroy()
-      .then(client.login(process.env.BOT_TOKEN).then(async () => restartchannel.send(`${message.author}, Restarted!`)))
+      restartchannel.send(`Restart in progress.`) //Nachricht das er anfängt sich neuzustarten.
+      client.destroy() //Loggt den Bot aus.
+      .then(client.login(process.env.BOT_TOKEN).then(async () => restartchannel.send(`${message.author}, Restarted!`))) //Nachdem wir den Bot ausgeloggt haben, soll er sich ja wieder einloggen, das machen wir "async" also synchron. Heißt sobald er neugestartet ist, gibt er dir eine Bestätigung.
     } else {
       message.reply(`Only the Dev can use this!`)
     }
