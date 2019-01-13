@@ -1,173 +1,141 @@
-const Discord = require("discord.js"),
-      bot = new Discord.Client(),
-      fs = require("fs"),
-Config = require("./config.json")
+const Discord = require("discord.js");
+const fs = require("fs")
+
+let Config = require("./config.json")
 
 const client = new Discord.Client();
 
-/**
- * The ready event is vital, it means that only _after_ this will your bot start reacting to information
- * received from Discord
- */
-client.on('ready', () => {
-  console.log('I am ready!');
+client.on("ready", async () => {
+  console.log(`Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`); 
+  client.user.setStatus("online")
 });
+setInterval(async function() { //Ein Interval ist eine Funktion die etwas in einer bestimmten Zeit ausführt, sei es der Status oder z.B ein Spam Command xD
 
-// Log our bot in using the token from https://discordapp.com/developers/applications/me
-client.login(process.env.BOT_TOKEN);
+    var random = [`${client.guilds.size} servers`,`${client.users.size} members!`,`with ${client.users.get(Config.DevID).tag}`,`${Config.prefix}help`] //Hier legen wir fest, zwischen was der Bot wechseln soll. Dazu immer [] nutzen.
+    let status = random[Math.floor(Math.random() * random.length)] //Hier lassen wir die angegebenen Status Typen wechseln. Das ganze "Random"
+
+    client.user.setActivity(status, {type: "PLAYING"}) //PLAYING, STREAMING, LISTENING, WATCHING
+}, 30000) //Hier kannstdu in Millisekunden angeben, in welcher Zeit der Bot wechseln soll.
 
 
-  // Create a new webhook
-const hook = new Discord.WebhookClient('webhookID', 'WebhookToken');
+//Login
+client.login(process.env.BOT_TOKEN)
+
+
+// Create a new webhook
+// const hook = new Discord.WebhookClient('webhookID', 'WebhookToken');
 
 // Send a message using the webhook
-hook.send('Ich bin jetze am leben!^^')
+// hook.send("I'm alive!")
 
 client.on('message', message => {
-  // Ignore messages that aren't from a gui (!message.guild) return;
-
-  // If the message content starts with "!kick"
-  if (message.content.startsWith('->kick')) {
-    const user = message.mentions.users.first();
-    // If we have a user mentioned
-    if (user) {
-      // Now we get the member from the user
-      const member = message.guild.member(user);
-      // If the member is in the guild
-      if (member) {
-        /**
-         * Kick the member
-         * Make sure you run this on a member, not a user!
-         * There are big differences between a user and a member
-         */
-        member.kick('Optional reason that will display in the audit logs').then(() => {
-          // We let the message author know we were able to kick the person
-          message.reply(`Successfully kicked ${user.tag}`);
-        }).catch(err => {
-          // An error happened
-          // This is generally due to the bot not being able to kick the member,
-          // either due to missing permissions or role hierarchy
-          message.reply('I was unable to kick the member');
-          // Log the error
-          console.error(err);
-        });
-      } else {
-        // The mentioned user isn't in this guild
-        message.reply('That user isn\'t in this guild!');
-      }
-    // Otherwise, if no user was mentioned
-    } else {
-      message.reply('You didn\'t mention the user to kick!');
-    }
-  }
-});
 
 
-client.on('message', message => {
-  // Ignore messages that aren't from a guild
-  if (!message.guild) return;
-
-  // if the message content starts with "!ban"
-  if (message.content.startsWith('->ban')) {
-    // Assuming we mention someone in the message, this will return the user
-    // Read more about mentions over at https://discord.js.org/#/docs/main/stable/class/MessageMentions
-    const user = message.mentions.users.first();
-    // If we have a user mentioned
-    if (user) {
-      // Now we get the member from the user
-      const member = message.guild.member(user);
-      // If the member is in the guild
-      if (member) {
-        /**
-         * Ban the member
-         * Make sure you run this on a member, not a user!
-         * There are big differences between a user and a member
-         * Read more about what ban options there are over at
-         * https://discord.js.org/#/docs/main/stable/class/GuildMember?scrollTo=ban
-         */
-        member.ban({
-          reason: 'They were bad!',
-        }).then(() => {
-          // We let the message author know we were able to ban the person
-          message.reply(`Successfully banned ${user.tag}`);
-        }).catch(err => {
-          // An error happened
-          // This is generally due to the bot not being able to ban the member,
-          // either due to missing permissions or role hierarchy
-          message.reply('I was unable to ban the member');
-          // Log the error
-          console.error(err);
-        });
-      } else {
-        // The mentioned user isn't in this guild
-        message.reply('That user isn\'t in this guild!');
-      }
-    } else {
-    // Otherwise, if no user was mentioned
-      message.reply('You didn\'t mention the user to ban!');
-    }
-  }
-});
+  //VARS
+  var args = message.content.slice(Config.prefix.length).trim().split(" ")
 
 
 
-client.on('message', message => {
+  //KICK COMMAND
+  if(message.content.startsWith(`${Config.prefix}kick`)) {
+      if(message.member.hasPermission("KICK_MEMBERS")) { //Hier checken wir die Rechte vom User, der den Befehl ausführt.
+    
+        let member = message.mentions.members.first() //Hier legen wir fest, wer der User sein soll, der gekickt werden soll, indem wir ihn mention, also pingen bzw. markieren.
   
-  if (message.content === '->help') {
+        if(!member) //Falls bei einem if ein ! ist, ist es das gegenteil von einem if, also falls etwas "nicht" eintrifft. Also, falls kein User gepingt wird, senden wir dem Autor eine Nachricht, das er etwas vergessen hat.
+                    //Bei einem if(!) solltest du immer ein "return" nutzen. Ist einfacher und erspart dir einige Klammern "{}"
+  
+          return message.reply(`Please enter a user!`); //Nachricht die der Autor bekommt.
+  
+        if(!member.kickable) //Hier checken wir, ob der Bot überhaupt Rechte hat, den User zu kicken, seien es Kick Rechte die im Fehlen, oder der User hat eine höhere Postion als der Bot, kann alles sein.
+  
+          return message.reply("Unable  to kick this user."); //Nachricht die der Autor bekommt.
+    
+  
+        let reason = args.slice(2).join(' '); //Hier legen wir einen Grund fest, wieso der jeweilige User gekickt werden soll.
+  
+        if(!reason) return message.reply(`Enter a reason!`) //Falls kein Grund angegeben ist, wird der Autor drauf hingewiesen.
+  
+        if(member.user.id == Config.DevID) return message.reply(`Can't kick the Dev!`) //Hier kannst einen so gennanten "Schutz" einbauen, z.B falls der User der gebannt werden soll "DEINE" ID hat, das der Bot sich dann weigert dich zu kicken. 
+  
+        await = member.kick(reason)
+    
+        return message.reply(`**${member.user.username}**#${member.user.discriminator} got kicked because of: **${reason}**`); //Bestätigung das der User erfolgreich gekickt wurde.
+  
+        } else {
+          message.channel.send(`You need Kick Permissions. ${message.author}`) //Hier bekommt der Autor der Nachricht einen "Error" das er die angeforderten Rechte nicht hat.
+        } 
+}
+
+   //BAN COMMAND
+   if(message.content.startsWith(`${Config.prefix}ban`)) {
+      if(message.member.hasPermission("BAN_MEMBERS")) { //Hier checken wir die Rechte vom User, der den Befehl ausführt.
+    
+        let member = message.mentions.members.first() //Hier legen wir fest, wer der User sein soll, der gebannt werden soll, indem wir ihn mention, also pingen bzw. markieren.
+  
+        if(!member) //Falls bei einem if ein ! ist, ist es das gegenteil von einem if, also falls etwas "nicht" eintrifft. Also, falls kein User gepingt wird, senden wir dem Autor eine Nachricht, das er etwas vergessen hat.
+                    //Bei einem if(!) solltest du immer ein "return" nutzen. Ist einfacher und erspart dir einige Klammern "{}"
+  
+          return message.reply(`Please enter a user!`); //Nachricht die der Autor bekommt.
+  
+        if(!member.bannable) //Hier checken wir, ob der Bot überhaupt Rechte hat, den User zu bannen, seien es Ban Rechte die im Fehlen, oder der User hat eine höhere Postion als der Bot, kann alles sein.
+  
+          return message.reply("Unable to ban this user."); //Nachricht die der Autor bekommt.
+    
+  
+        let reason = args.slice(2).join(' '); //Hier legen wir einen Grund fest, wieso der jeweilige User gebannt werden soll.
+  
+        if(!reason) return message.reply(`Enter a reason!`) //Falls kein Grund angegeben ist, wird der Autor drauf hingewiesen.
+  
+        if(member.user.id == Config.DevID) return message.reply(`Can't ban the Dev!`) //Hier kannst einen so gennanten "Schutz" einbauen, z.B falls der User der gebannt werden soll "DEINE" ID hat, das der Bot sich dann weigert dich zu kicken. 
+  
+        await = member.ban(reason)
+    
+        return message.reply(`**${member.user.username}**#${member.user.discriminator} got banned because of: **${reason}**`); //Bestätigung das der User erfolgreich gebannt wurde.
+  
+        } else {
+          message.channel.send(`You need Ban Permissions. ${message.author}`) //Hier bekommt der Autor der Nachricht einen "Error" das er die angeforderten Rechte nicht hat.
+        } 
+}
+
+  //HELP COMMAND
+  if(message.content == `${Config.prefix}help`) {
    
     var embed = new Discord.RichEmbed()
 
-      .setColor(0xFFEE58)
-
-      .setTitle('kuina´s Commands')
-
-      .addField(`**__Moderation__**`,"`kick`,`ban`",true)
-
-      .addField(`**__ka__**`," soon more^^",false)
-
-      .addField(`**__Sonstiges__**`,"`ping`,`avatar`",true)
+      .setColor(0xc5ca09)
+      .setTitle(`${client.user.username}'s Commands`)
+      .addField(`**__Moderation__**`,"`kick`,`ban`", true)
+      // .addField(`**__ka__**`," soon more^^", false)
+      .addField(`**__Other__**`,"`ping`,`avatar`,`invite`", true)
 
     message.channel.send(embed);
   }
-});
 
-
-// Create an event listener for messages
-client.on('message', message => {
-  // If the message is "ping"
-  if (message.content === '->ping') {
-    // Send "pong" to the same channel
-    message.channel.send(`Pong! ${Math.round(client.ping)}ms`);
+  //PING COMMAND
+  if(message.content == `${Config.prefix}ping`) {
+    message.channel.send(`Pong! ${client.ping}ms`);
   }
-});
 
-client.on('message', message => {
-
-  if (message.content === '->avatar') {
-
-    message.reply(message.author.avatarURL);
+  //AVATAR COMMAND
+  if(message.content == `${Config.prefix}avatar`) {
+    message.reply(message.author.displayAvatarURL);
   }
-});
 
-client.on("message", async message => {
-  // This event will run on every single message received, from any channel or DM.
-  
-  // It's good practice to ignore other bots. This also makes your bot ignore itself
-  // and not get into a spam loop (we call that "botception").
-  if(message.author.bot) return;
-  
-  // Also good practice to ignore any message that does not start with our prefix, 
-  // which is set in the configuration file.
-if(message.content.indexOf(config.prefix) !== 0) return}); 
+  //INVITE COMMAND
+  if(message.content == `${Config.prefix}invite`) {
+    var embed = new Discord.RichEmbed()
 
-client.on("ready", () => {
+    .setColor(0x0acdfe)
+    .setTitle(`Invite ${client.user.username}!`)
+    .setDescription(`[Just click here!](https://discordapp.com/oauth2/authorize?client_id=504710565369741322&permissions=2117598711&redirect_uri0=&&scope=bot)`)
 
-  console.log(`Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`); 
-
-  // Example of changing the bot's playing game to something useful. `client.user` is what the
-
-  // docs refer to as the "ClientUser".
-
-  client.user.setActivity(`on ${client.guilds.size} servers`);
+    message.channel.send(embed)
+  }
 
 });
+
+
+
+
+

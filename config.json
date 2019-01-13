@@ -1,6 +1,6 @@
 {
-    "Prefix": "->",
-    "Token":"your_tokien.here",
+    "prefix": "->",
+    "token":"",
     "OwnerID":"373529563969617924",
     "DevID":"345577792773160965",
     "version": "0.0.5",
@@ -13,7 +13,7 @@
         "3": "Watching"
     },
 
-    "StatusTypen": {
+    "StatusTypings": {
         "online": "Online",
         "idle": "Idle",
         "dnd": "Do Not Disturb",
