@@ -101,14 +101,37 @@ client.on('message', message => {
       .setTitle(`${client.user.username}'s Commands`)
       .addField(`**__Moderation__**`,"`kick`,`ban`", true)
       // .addField(`**__ka__**`," soon more^^", false)
-      .addField(`**__Other__**`,"`ping`,`avatar`,`invite`", true)
+      .addField(`**__Other__**`,"`ping`,`avatar`,`invite`,`uptime`", true)
 
     message.channel.send(embed);
   }
 
   //PING COMMAND
   if(message.content == `${Config.prefix}ping`) {
-    message.channel.send(`Pong! ${client.ping}ms`);
+    message.channel.send(`Pong! ${Math.round(client.ping)}ms`);
+  }
+
+  //UPTIME COMMAND
+  if(message.content == `${Config.prefix}uptime`) {
+    if(message.author.id == Config.DevID) {
+      let t = new Date(client.uptime)
+
+      let months = t.getUTCMonth();
+      let days = t.getUTCDate()-1;
+  
+      let minutes = t.getUTCMinutes();
+      let hours = t.getUTCHours();
+  
+  
+      let seconds = t.getUTCSeconds();
+  
+  
+      let uptime = `${days} days, ${hours} hours, ${minutes} minutes and ${seconds} seconds`;
+  
+      message.channel.send(uptime)
+    } else {
+      message.reply(`Only the Dev can use this!`)
+    }
   }
 
   //AVATAR COMMAND
