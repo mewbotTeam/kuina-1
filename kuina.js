@@ -175,9 +175,7 @@ client.on('message', message => {
               return text;
         } 
        try {
-        let code = args.join(" ");
         let evaled = eval(command);
-   
         if (typeof evaled !== "string")
           evaled = require("util").inspect(evaled);
    
