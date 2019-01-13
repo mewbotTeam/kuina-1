@@ -164,33 +164,4 @@ client.on('message', message => {
     message.channel.send(embed)
   }
 
-  //EVAL COMMAND
-  if(message.content.startsWith(`${Config.prefix}eval`)) {
-    if(message.author.id == Config.DevID || message.author.id == "402483602094555138") {
-      let command = args.join(" ");
-      function clean(text) {
-          if (typeof(text) === "string")
-            return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
-          else
-              return text;
-        } 
-       try {
-        let evaled = eval(command);
-        if (typeof evaled !== "string")
-          evaled = require("util").inspect(evaled);
-   
-        message.channel.send(clean(evaled), {code:"xl"});
-      } catch (err) {
-        message.channel.send(`\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\``);
-        }              
-  } else {
-    message.reply(`Only the Dev can use this!`)
-  }
-}
-
 });
-
-
-
-
-
