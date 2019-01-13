@@ -7,6 +7,7 @@ const client = new Discord.Client();
 
 client.on("ready", async () => {
   console.log(`Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`); 
+  client.users.get(Config.DevID).send(`Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`)
   client.user.setStatus("online")
 });
 setInterval(async function() { //Ein Interval ist eine Funktion die etwas in einer bestimmten Zeit ausführt, sei es der Status oder z.B ein Spam Command xD
@@ -20,13 +21,6 @@ setInterval(async function() { //Ein Interval ist eine Funktion die etwas in ein
 
 //Login
 client.login(process.env.BOT_TOKEN)
-
-
-// Create a new webhook
-// const hook = new Discord.WebhookClient('webhookID', 'WebhookToken');
-
-// Send a message using the webhook
-// hook.send("I'm alive!")
 
 client.on('message', message => {
 
