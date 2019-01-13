@@ -101,7 +101,8 @@ client.on('message', message => {
       .setTitle(`${client.user.username}'s Commands`)
       .addField(`**__Moderation__**`,"`kick`,`ban`", true)
       // .addField(`**__ka__**`," soon more^^", false)
-      .addField(`**__Other__**`,"`ping`,`avatar`,`invite`,`uptime`", true)
+      .addField(`**__Other__**`,"`ping`,`avatar`,`invite`", true)
+      .addField(`**__Dev__**`,"`uptime`,`restart`")
 
     message.channel.send(embed);
   }
@@ -129,6 +130,19 @@ client.on('message', message => {
       let uptime = `${days} days, ${hours} hours, ${minutes} minutes and ${seconds} seconds`;
   
       message.channel.send(uptime)
+    } else {
+      message.reply(`Only the Dev can use this!`)
+    }
+  }
+
+  //RESTART COMMAND
+  if(message.content == `${Config.prefix}restart`) {
+    if(message.author.id == Config.DevID) {
+      let restartchannel = message.channel
+
+      restartchannel.send(`Restart in progress.`)
+      client.destroy()
+      .then(client.login(process.env.BOT_TOKEN).then(async () => restartchannel.send(`${message.author}, Restarted!`)))
     } else {
       message.reply(`Only the Dev can use this!`)
     }
