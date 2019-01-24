@@ -10,13 +10,13 @@ client.on("ready", async () => {
   client.users.get(config.DevID).send(`Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`)
   client.user.setStatus("online")
 });
-setInterval(async function() { //Ein Interval ist eine Funktion die etwas in einer bestimmten Zeit ausführt, sei es der Status oder z.B ein Spam Command xD
+setInterval(async function() { 
 
-    var random = [`${client.guilds.size} servers`,`${client.users.size} members!`,`with ${client.users.get(config.DevID).tag}`,`${config.prefix}help`] //Hier legen wir fest, zwischen was der Bot wechseln soll. Dazu immer [] nutzen.
-    let status = random[Math.floor(Math.random() * random.length)] //Hier lassen wir die angegebenen Status Typen wechseln. Das ganze "Random"
+    var random = [`${client.guilds.size} servers`,`${client.users.size} members!`,`with ${client.users.get(config.DevID).tag}`,`${config.prefix}help`] 
+    let status = random[Math.floor(Math.random() * random.length)] 
 
     client.user.setActivity(status, {type: "PLAYING"}) //PLAYING, STREAMING, LISTENING, WATCHING
-}, 30000) //Hier kannstdu in Millisekunden angeben, in welcher Zeit der Bot wechseln soll.
+}, 30000) 
 
 
 //Login
