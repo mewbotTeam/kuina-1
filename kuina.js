@@ -109,9 +109,8 @@ client.on('message', message => {
   //UPTIME COMMAND
   if(command == `uptime`) {
     if(message.author.id == config.DevID) {
-      let t = new Date(client.uptime) //Hier konvertieren wir die Uptime des Bots, als richtige Zeit, und nicht als Millisekunden.
+      let t = new Date(client.uptime) 
       
-      //Da wir nun die Uptime konvertiert haben, können wir uns nun verschiedene Werte ausgeben lassen. Tage, Stunden, Minuten und Sekunden. Und noch einiges mehr, was aber nicht nötig ist. (z.B Jahr oder so.)
       let days = t.getUTCDate()-1;
   
       let minutes = t.getUTCMinutes();
@@ -121,7 +120,7 @@ client.on('message', message => {
       let seconds = t.getUTCSeconds();
   
   
-      let uptime = `${days} days, ${hours} hours, ${minutes} minutes and ${seconds} seconds`; //Hier sagen wir das der Bot alle Werte aufeinmal abschicken soll.
+      let uptime = `${days} days, ${hours} hours, ${minutes} minutes and ${seconds} seconds`; 
   
       message.channel.send(uptime)
     } else {
@@ -133,11 +132,11 @@ client.on('message', message => {
   //RESTART COMMAND
   if(command == `restart`) {
     if(message.author.id == config.DevID) {
-      let restartchannel = message.channel //Channel wo er die Bestätigung gibt
+      let restartchannel = message.channel
 
-      restartchannel.send(`Restart in progress.`) //Nachricht das er anfängt sich neuzustarten.
-      client.destroy() //Loggt den Bot aus.
-      .then(client.login(process.env.BOT_TOKEN).then(async () => restartchannel.send(`${message.author}, Restarted!`))) //Nachdem wir den Bot ausgeloggt haben, soll er sich ja wieder einloggen, das machen wir "async" also synchron. Heißt sobald er neugestartet ist, gibt er dir eine Bestätigung.
+      restartchannel.send(`Restart in progress.`) 
+      client.destroy() 
+      .then(client.login(process.env.BOT_TOKEN).then(async () => restartchannel.send(`${message.author}, Restarted!`))) 
     } else {
       message.reply(`Only the Dev can use this!`)
     }
