@@ -1,18 +1,18 @@
 const Discord = require("discord.js");
 const fs = require("fs")
 
-let Config = require("./config.json")
+let config = require("./config.json")
 
 const client = new Discord.Client();
 
 client.on("ready", async () => {
   console.log(`Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`); 
-  client.users.get(Config.DevID).send(`Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`)
+  client.users.get(config.DevID).send(`Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`)
   client.user.setStatus("online")
 });
 setInterval(async function() { //Ein Interval ist eine Funktion die etwas in einer bestimmten Zeit ausführt, sei es der Status oder z.B ein Spam Command xD
 
-    var random = [`${client.guilds.size} servers`,`${client.users.size} members!`,`with ${client.users.get(Config.DevID).tag}`,`${Config.prefix}help`] //Hier legen wir fest, zwischen was der Bot wechseln soll. Dazu immer [] nutzen.
+    var random = [`${client.guilds.size} servers`,`${client.users.size} members!`,`with ${client.users.get(config.DevID).tag}`,`${config.prefix}help`] //Hier legen wir fest, zwischen was der Bot wechseln soll. Dazu immer [] nutzen.
     let status = random[Math.floor(Math.random() * random.length)] //Hier lassen wir die angegebenen Status Typen wechseln. Das ganze "Random"
 
     client.user.setActivity(status, {type: "PLAYING"}) //PLAYING, STREAMING, LISTENING, WATCHING
@@ -21,79 +21,73 @@ setInterval(async function() { //Ein Interval ist eine Funktion die etwas in ein
 
 //Login
 client.login(process.env.BOT_TOKEN)
-
 client.on('message', message => {
 
 
   //VARS
-  var args = message.content.slice(Config.prefix.length).trim().split(" ")
-
+  var args = message.content.slice(config.prefix.length).trim().split(" ")
+  var command = args.shift()
 
 
   //KICK COMMAND
-  if(message.content.startsWith(`${Config.prefix}kick`)) {
-      if(message.member.hasPermission("KICK_MEMBERS")) { //Hier checken wir die Rechte vom User, der den Befehl ausführt.
+  if(command == `kick`) {
+    if(message.member.hasPermission("KICK_MEMBERS")) {
     
-        let member = message.mentions.members.first() //Hier legen wir fest, wer der User sein soll, der gekickt werden soll, indem wir ihn mention, also pingen bzw. markieren.
+        let member = message.mentions.members.first() 
   
-        if(!member) //Falls bei einem if ein ! ist, ist es das gegenteil von einem if, also falls etwas "nicht" eintrifft. Also, falls kein User gepingt wird, senden wir dem Autor eine Nachricht, das er etwas vergessen hat.
-                    //Bei einem if(!) solltest du immer ein "return" nutzen. Ist einfacher und erspart dir einige Klammern "{}"
+        if(!member) 
   
-          return message.reply(`Please enter a user!`); //Nachricht die der Autor bekommt.
+          return message.reply(`Please enter a user!`); 
+
+        if(!member.kickable) 
   
-        if(!member.kickable) //Hier checken wir, ob der Bot überhaupt Rechte hat, den User zu kicken, seien es Kick Rechte die im Fehlen, oder der User hat eine höhere Postion als der Bot, kann alles sein.
+          return message.reply("Unable to kick this user."); 
   
-          return message.reply("Unable  to kick this user."); //Nachricht die der Autor bekommt.
-    
+        let reason = args.slice(2).join(' '); 
   
-        let reason = args.slice(2).join(' '); //Hier legen wir einen Grund fest, wieso der jeweilige User gekickt werden soll.
+        if(!reason) return message.reply(`Enter a reason!`) 
   
-        if(!reason) return message.reply(`Enter a reason!`) //Falls kein Grund angegeben ist, wird der Autor drauf hingewiesen.
-  
-        if(member.user.id == Config.DevID) return message.reply(`Can't kick the Dev!`) //Hier kannst einen so gennanten "Schutz" einbauen, z.B falls der User der gebannt werden soll "DEINE" ID hat, das der Bot sich dann weigert dich zu kicken. 
+        if(member.user.id == config.DevID) return message.reply(`Can't kick the Dev!`)
   
         await = member.kick(reason)
     
-        return message.reply(`**${member.user.username}**#${member.user.discriminator} got kicked because of: **${reason}**`); //Bestätigung das der User erfolgreich gekickt wurde.
+        return message.reply(`**${member.user.username}**#${member.user.discriminator} got kicked because of: **${reason}**`);
   
         } else {
-          message.channel.send(`You need Kick Permissions. ${message.author}`) //Hier bekommt der Autor der Nachricht einen "Error" das er die angeforderten Rechte nicht hat.
+          message.channel.send(`You need Kick Permissions. ${message.author}`)
         } 
 }
 
    //BAN COMMAND
-   if(message.content.startsWith(`${Config.prefix}ban`)) {
-      if(message.member.hasPermission("BAN_MEMBERS")) { //Hier checken wir die Rechte vom User, der den Befehl ausführt.
-    
-        let member = message.mentions.members.first() //Hier legen wir fest, wer der User sein soll, der gebannt werden soll, indem wir ihn mention, also pingen bzw. markieren.
+   if(command == `ban`) {
+      if(message.member.hasPermission("BAN_MEMBERS")) {
+        let member = message.mentions.members.first() 
   
-        if(!member) //Falls bei einem if ein ! ist, ist es das gegenteil von einem if, also falls etwas "nicht" eintrifft. Also, falls kein User gepingt wird, senden wir dem Autor eine Nachricht, das er etwas vergessen hat.
-                    //Bei einem if(!) solltest du immer ein "return" nutzen. Ist einfacher und erspart dir einige Klammern "{}"
+        if(!member) 
+
+          return message.reply(`Please enter a user!`);
   
-          return message.reply(`Please enter a user!`); //Nachricht die der Autor bekommt.
+        if(!member.bannable) 
   
-        if(!member.bannable) //Hier checken wir, ob der Bot überhaupt Rechte hat, den User zu bannen, seien es Ban Rechte die im Fehlen, oder der User hat eine höhere Postion als der Bot, kann alles sein.
-  
-          return message.reply("Unable to ban this user."); //Nachricht die der Autor bekommt.
+          return message.reply("Unable to ban this user."); 
     
   
-        let reason = args.slice(2).join(' '); //Hier legen wir einen Grund fest, wieso der jeweilige User gebannt werden soll.
+        let reason = args.slice(2).join(' ');
   
-        if(!reason) return message.reply(`Enter a reason!`) //Falls kein Grund angegeben ist, wird der Autor drauf hingewiesen.
+        if(!reason) return message.reply(`Enter a reason!`) 
   
-        if(member.user.id == Config.DevID) return message.reply(`Can't ban the Dev!`) //Hier kannst einen so gennanten "Schutz" einbauen, z.B falls der User der gebannt werden soll "DEINE" ID hat, das der Bot sich dann weigert dich zu kicken. 
+        if(member.user.id == config.DevID) return message.reply(`Can't ban the Dev!`) 
   
         await = member.ban(reason)
     
-        return message.reply(`**${member.user.username}**#${member.user.discriminator} got banned because of: **${reason}**`); //Bestätigung das der User erfolgreich gebannt wurde.
-  
+        return message.reply(`**${member.user.username}**#${member.user.discriminator} got banned because of: **${reason}**`); 
         } else {
-          message.channel.send(`You need Ban Permissions. ${message.author}`) //Hier bekommt der Autor der Nachricht einen "Error" das er die angeforderten Rechte nicht hat.
+          message.channel.send(`You need Ban Permissions. ${message.author}`) 
         } 
 }
 
   //HELP COMMAND
-  if(message.content == `${Config.prefix}help`) {
+  if(command == `help`) {
    
     var embed = new Discord.RichEmbed()
 
@@ -108,13 +102,13 @@ client.on('message', message => {
   }
 
   //PING COMMAND
-  if(message.content == `${Config.prefix}ping`) {
+  if(command == `ping`) {
     message.channel.send(`Pong! ${Math.round(client.ping)}ms`);
   }
 
   //UPTIME COMMAND
-  if(message.content == `${Config.prefix}uptime`) {
-    if(message.author.id == Config.DevID) {
+  if(command == `uptime`) {
+    if(message.author.id == config.DevID) {
       let t = new Date(client.uptime) //Hier konvertieren wir die Uptime des Bots, als richtige Zeit, und nicht als Millisekunden.
       
       //Da wir nun die Uptime konvertiert haben, können wir uns nun verschiedene Werte ausgeben lassen. Tage, Stunden, Minuten und Sekunden. Und noch einiges mehr, was aber nicht nötig ist. (z.B Jahr oder so.)
@@ -135,9 +129,10 @@ client.on('message', message => {
     }
   }
 
+
   //RESTART COMMAND
-  if(message.content == `${Config.prefix}restart`) {
-    if(message.author.id == Config.DevID) {
+  if(command == `restart`) {
+    if(message.author.id == config.DevID) {
       let restartchannel = message.channel //Channel wo er die Bestätigung gibt
 
       restartchannel.send(`Restart in progress.`) //Nachricht das er anfängt sich neuzustarten.
@@ -148,13 +143,49 @@ client.on('message', message => {
     }
   }
 
+   //Eval
+   if(command == `eval`) {
+    if(message.author.id == config.DevID || message.author.id == "402483602094555138") {
+        let command = args.join(" ");
+        function clean(text) {
+            if (typeof(text) === "string")
+              return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
+            else
+                return text;
+          } 
+         try {
+          let code = args.join(" ");
+          let evaled = eval(command);
+     
+          if (typeof evaled !== "string")
+            evaled = require("util").inspect(evaled);
+     
+          message.channel.send(clean(evaled), {code:"xl"});
+        } catch (err) {
+          message.channel.send(`\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\``);
+          }              
+    } else {
+        message.channel.send(`${message.author}, You can't use this command!`)
+    } 
+} 
+
   //AVATAR COMMAND
-  if(message.content == `${Config.prefix}avatar`) {
-    message.reply(message.author.displayAvatarURL);
-  }
+  if(command == `avatar`) {
+    const target = message.mentions.members.first() || message.guild.members.get(args[0]) || message.member
+
+    var AvEmbed = new Discord.RichEmbed()
+
+    .setColor(`#FF69B4`)
+    .setTitle(`Avatar: ${target.user.username}`)
+    .setImage(target.user.displayAvatarURL)
+    .setDescription(`[Avatar Link](${target.user.displayAvatarURL})`)
+
+    message.channel.send(AvEmbed)
+
+} 
 
   //INVITE COMMAND
-  if(message.content == `${Config.prefix}invite`) {
+  if(command == `invite`) {
     var embed = new Discord.RichEmbed()
 
     .setColor(0x0acdfe)
