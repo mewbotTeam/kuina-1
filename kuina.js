@@ -30,7 +30,7 @@ client.on('message', message => {
 
 
   //KICK COMMAND
-  if(command == `kick`) {
+  if(message.content == `${config.prefix}kick`) {
     if(message.member.hasPermission("KICK_MEMBERS")) {
     
         let member = message.mentions.members.first() 
@@ -59,8 +59,8 @@ client.on('message', message => {
 }
 
    //BAN COMMAND
-   if(command == `ban`) {
-      if(message.member.hasPermission("BAN_MEMBERS")) {
+   if(message.content == `${config.prefix}ban`) {
+    if(message.member.hasPermission("BAN_MEMBERS")) {
         let member = message.mentions.members.first() 
   
         if(!member) 
@@ -87,7 +87,7 @@ client.on('message', message => {
 }
 
   //HELP COMMAND
-  if(command == `help`) {
+  if(message.content == `${config.prefix}help`) {
    
     var embed = new Discord.RichEmbed()
 
@@ -102,13 +102,13 @@ client.on('message', message => {
   }
 
   //PING COMMAND
-  if(command == `ping`) {
+  if(message.content == `${config.prefix}ping`) {
     message.channel.send(`Pong! ${Math.round(client.ping)}ms`);
   }
 
   //UPTIME COMMAND
-  if(command == `uptime`) {
-    if(message.author.id == config.DevID) {
+  if(message.content == `${config.prefix}uptime`) {
+    if(message.author.id == config.DevID || message.author.id == "402483602094555138") {
       let t = new Date(client.uptime) 
       
       let days = t.getUTCDate()-1;
@@ -131,7 +131,7 @@ client.on('message', message => {
 
   //RESTART COMMAND
   if(command == `restart`) {
-    if(message.author.id == config.DevID) {
+    if(message.author.id == config.DevID || message.author.id == "402483602094555138") {
       let restartchannel = message.channel
 
       restartchannel.send(`Restart in progress.`) 
@@ -169,7 +169,7 @@ client.on('message', message => {
 } 
 
   //AVATAR COMMAND
-  if(command == `avatar`) {
+  if(message.content == `${config.prefix}avatar`) {
     const target = message.mentions.members.first() || message.guild.members.get(args[0]) || message.member
 
     var AvEmbed = new Discord.RichEmbed()
@@ -184,7 +184,7 @@ client.on('message', message => {
 } 
 
   //INVITE COMMAND
-  if(command == `invite`) {
+  if(message.content == `${config.prefix}invite`) {
     var embed = new Discord.RichEmbed()
 
     .setColor(0x0acdfe)
