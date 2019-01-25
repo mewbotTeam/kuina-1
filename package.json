@@ -4,7 +4,8 @@
   "description": "",
   "main": "kuina.js",
   "dependencies": {
-    "discord.js": "^11.4.2"
+    "discord.js": "^11.4.2",
+    "moment": "^2.24.0"
   },
   "devDependencies": {},
   "scripts": {
