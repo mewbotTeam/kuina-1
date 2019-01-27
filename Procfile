@@ -1,1 +1,1 @@
-worker node kuina.js
+worker node node.js
