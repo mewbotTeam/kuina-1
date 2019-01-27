@@ -29,11 +29,12 @@ client.on('message', message => {
 
   //VARS
   var args = message.content.slice(config.prefix.length).trim().split(" ")
-  var command = args.shift()
+  var messageArray = message.content.split(" ")
+  var command = messageArray[0]
 
 
   //KICK COMMAND
-  if(command == `kick`) {
+  if(command == `${config.prefix}kick`) {
     if(message.member.hasPermission("KICK_MEMBERS")) {
     
         let member = message.mentions.members.first() 
@@ -62,7 +63,7 @@ client.on('message', message => {
 }
 
    //BAN COMMAND
-   if(command == `ban`) {
+   if(command == `${config.prefix}ban`) {
     if(message.member.hasPermission("BAN_MEMBERS")) {
         let member = message.mentions.members.first() 
   
@@ -133,7 +134,7 @@ client.on('message', message => {
 
 
   //RESTART COMMAND
-  if(command == `restart`) {
+  if(command == `${config.prefix}restart`) {
     if(message.author.id == config.DevID || message.author.id == "402483602094555138") {
       let restartchannel = message.channel
 
@@ -146,7 +147,7 @@ client.on('message', message => {
   }
 
    //Eval
-   if(command == `eval`) {
+   if(command == `${config.prefix}eval`) {
     if(message.author.id == config.DevID || message.author.id == "402483602094555138") {
         let command = args.join(" ");
         function clean(text) {
@@ -172,7 +173,7 @@ client.on('message', message => {
 } 
 
   //AVATAR COMMAND
-  if(command == `avatar`) {
+  if(command == `${config.prefix}avatar`) {
     const target = message.mentions.members.first() || message.guild.members.get(args[0]) || message.member
 
     var AvEmbed = new Discord.RichEmbed()
@@ -209,7 +210,7 @@ client.on('message', message => {
   }
 
   //USER COMMAND
-  if(command == `user`) {
+  if(command == `${config.prefix}user`) {
 
     const target = message.mentions.members.first() || message.guild.members.get(args[0]) || message.member
 
