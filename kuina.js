@@ -29,8 +29,7 @@ client.on('message', message => {
 
   //VARS
   var args = message.content.slice(config.prefix.length).trim().split(" ")
-  var messageArray = message.content.split(" ")
-  var command = messageArray[0]
+  var command = args.shift()
 
 
   //KICK COMMAND
