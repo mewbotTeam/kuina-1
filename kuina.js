@@ -38,7 +38,7 @@ client.on('message', message => {
 
       .setColor(0xc5ca09)
       .setTitle(`${client.user.username}'s Commands`)
-      .addField(`**__Information__**`,"`bot`,`servers`,`user`,`ping`", true)
+      .addField(`**__Information__**`,"`bot`,`servers`,`ping`", true)
       .addField(`**__Moderation__**`,"`kick`,`ban`", true)
       .addField(`**__Other__**`,"`avatar`,`invite`", false)
       .addField(`**__Dev__**`,"`uptime`,`restart`,`eval`",false)
@@ -120,43 +120,6 @@ client.on('message', message => {
 
     message.channel.send(infoEmbed)
   }
-
-  //USER COMMAND
-  if(command == `${config.prefix}user`) {
-
-    const target = message.mentions.members.first() || message.guild.members.get(args[0]) || message.member
-
-    var userI = new Discord.RichEmbed()
-
-    .setColor(target.highestRole.hexColor || 0x000000)
-    .setTitle(`Info about ${target.user.username}`)
-    .addField(`Name + Tag`,`${target.user.username}#${target.user.discriminator}`)
-
-    if(target.user.username != target.displayName) {
-        userI.addField(`Nickname`, `${target.displayName}`)
-      } else {
-          userI.addField(`Nickname`, `-`)
-      }
-
-        userI.addField(`ID`,`${target.id}`)
-        userI.addField(`Status`,`${config.Usertypes[target.user.presence.status]}`)
-        .setTimestamp()
-
-        userI.addField(`Roles`,`${target.roles.map(role => role).splice(1).join(" | ") || `-`}`)
-
-      if(target.user.presence.game) {
-          userI.addField(`Activity`,`${config.Activitytypes[target.user.presence.game.type]} **${target.user.presence.game.name}**`)
-      } else {
-          userI.addField(`Activity`,`~`)
-      }
-
-      userI.addField(`Account created at`,`${moment(target.user.createdAt).format("DD.MM.YYYY")}`)
-
-        userI.setThumbnail(target.user.displayAvatarURL)
-
-        message.channel.send(userI)
-  }
-
 
   //KICK COMMAND
   if(command == `${config.prefix}kick`) {
