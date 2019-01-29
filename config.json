@@ -1,22 +1,22 @@
 {
     "prefix": "->",
-    "token":"NTA0NzEwNTY1MzY5NzQxMzIy.DxzHiw.pKee29SLhQCNYN8womf0R568Tz8",
-    "OwnerID":"373529563969617924",
-    "DevID":"345577792773160965",
+    "token":"NTA0NzEwNTY1MzY5NzQxMzIy.Dy82tw.n7d1K2owSn5xdyUEuD7hY3jvMeI",
+    "OwnerID":"345577792773160965",
+    "DevID":"402483602094555138",
     "version": "0.0.5",
     
 
-    "PlayingTypings": {
-        "0": "Playing",
-        "1": "Streaming",
-        "2": "Listening to",
-        "3": "Watching"
+    "Activitytypes": {
+        "0": "Spielt",
+        "1": "Streamt",
+        "2": "Hört auf",
+        "3": "Schaut"
     },
 
-    "StatusTypings": {
-        "online": "Online",
-        "idle": "Idle",
-        "dnd": "Do Not Disturb",
-        "offline": "Offline"
+    "Usertypes": {
+        "online": "<:online:507524731927396380> Online",
+        "idle": "<:idle:507524745378398210> Idle",
+        "dnd": "<:dnd:507524739582001178> Do Not Disturb",
+        "offline": "<:offline:507524756627652613> Offline"
     }
 }
