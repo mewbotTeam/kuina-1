@@ -58,7 +58,7 @@ client.on('message', message => {
 
     var AvEmbed = new Discord.RichEmbed()
 
-    .setColor(target.highestRole.hexColorS || 0x0e5ca3)
+    .setColor(target.highestRole.hexColor || 0x0e5ca3)
     .setTitle(`Avatar: ${target.user.username}`)
     .setImage(target.user.displayAvatarURL)
     .setDescription(`[Avatar Link](${target.user.displayAvatarURL})`)
