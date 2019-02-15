@@ -1,12 +1,14 @@
-const Discord = require("discord.js");
-const fs = require("fs")
-const moment = require("moment")
+const Discord = require("discord.js"),
+      client = new Discord.Client(),
+      fs = require("fs"),
+Config = require("./config.json")
+
+const client = new Discord.Client();
 
 let config = require("./config.json")
 let package = require("./package.json")
 
 
-const client = new Discord.Client();
 
 client.on("ready", async () => {
   console.log(`Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`); 
@@ -72,8 +74,8 @@ client.on('message', message => {
     var embed = new Discord.RichEmbed()
 
     .setColor(0x0acdfe)
-    .setTitle(`Invite ${client.user.username}!`)
-    .setDescription(`[Just click here!](https://discordapp.com/oauth2/authorize?client_id=504710565369741322&permissions=2117598711&redirect_uri0=&&scope=bot)`)
+    .setTitle(`Invites!`)
+    .setDescription(`[Click here to invite me!](https://discordapp.com/oauth2/authorize?client_id=504710565369741322&permissions=2117598711&redirect_uri0=&&scope=bot) \nJoin my Support Server [here](https://discord.gg/KKG2VP4)`)
 
     message.channel.send(embed)
   }
