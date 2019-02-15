@@ -3,8 +3,6 @@ const Discord = require("discord.js"),
       fs = require("fs"),
 Config = require("./config.json")
 
-const client = new Discord.Client();
-
 let config = require("./config.json")
 let package = require("./package.json")
 
